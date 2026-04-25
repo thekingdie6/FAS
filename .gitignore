@@ -73,3 +73,14 @@ crashlytics-build.properties
 # Temporary auto-generated Android Assets
 /[Aa]ssets/[Ss]treamingAssets/aa.meta
 /[Aa]ssets/[Ss]treamingAssets/aa/*
+
+# 修复子目录下的 Unity 临时文件拦截
+UnityProject/[Ll]ibrary/
+UnityProject/[Tt]emp/
+UnityProject/[Oo]bj/
+UnityProject/[Ll]ogs/
+UnityProject/[Mm]emoryCaptures/
+UnityProject/[Uu]ser[Ss]ettings/
+UnityProject/[Bb]uild/
+UnityProject/[Bb]uilds/
+UnityProject/.[Vv]s/

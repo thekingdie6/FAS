@@ -12,12 +12,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 553a48230bf17ca4782698ef6bcaca17, type: 3}
   m_Name: Strawberry
   m_EditorClassIdentifier: Assembly-CSharp::CropData
-  ItemID: 0
-  ItemName: 
-  ItemDescription: 
+  ItemID: 2
+  ItemName: "\u8349\u8393"
+  ItemDescription: "\u8BF4\u5B9E\u8BDD\uFF0C\u8FD9\u73A9\u610F\u66F4\u50CF\u6811\u679C"
   Category: 0
   MaxStackSize: 99
-  Icon: {fileID: 0}
+  Icon: {fileID: 5822373649741285269, guid: 5acd0344bafb6814aa5e8664da15fdc0, type: 3}
   DropPrefab: {fileID: 0}
   cropName: "\u8349\u8393"
   growthDate: 3

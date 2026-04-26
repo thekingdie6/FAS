@@ -12,12 +12,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 553a48230bf17ca4782698ef6bcaca17, type: 3}
   m_Name: Cabbage
   m_EditorClassIdentifier: Assembly-CSharp::CropData
-  ItemID: 0
-  ItemName: 
-  ItemDescription: 
+  ItemID: 1
+  ItemName: "\u767D\u83DC"
+  ItemDescription: "\u8FD9\u662F\u4E16\u754C\u4E0A\u7B2C\u4E00\u9897\u767D\u83DC"
   Category: 4
   MaxStackSize: 99
-  Icon: {fileID: 0}
+  Icon: {fileID: -5659601288151787448, guid: 5acd0344bafb6814aa5e8664da15fdc0, type: 3}
   DropPrefab: {fileID: 0}
   cropName: "\u767D\u83DC"
   growthDate: 5

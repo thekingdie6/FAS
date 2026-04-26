@@ -22,6 +22,13 @@ public class UI_InventoryManager : MonoBehaviour
     public int HotbarSize = 9;//快捷栏数量
     public int BackpackSize = 27;//背包额外数量
 
+    [Header("拖拽系统幽灵图")]
+    public Image DragGhostIcon;
+
+    private bool _isWaitingForServer = false;//是否等待服务器
+    private float _lastActionTime = 0f;//上次响应时间
+    private const float ACTION_COOLDOWN = 0.3f;//300ms硬直事件
+
     private UI_Slot[] _allUISlots;//内部名单，记录格子预制体外壳
     // Start is called once before the first execution of Update after the MonoBehaviour is created
 
@@ -39,6 +46,20 @@ public class UI_InventoryManager : MonoBehaviour
         if(BackpackPanel!=null) { BackpackPanel.SetActive(false); }
         //初始生成所有格子
         InitializeSlots();
+        DragGhostIcon.gameObject.SetActive(false);
+    }
+    public void StartDrag(ItemDataSO data)
+    {
+        DragGhostIcon.gameObject.SetActive(true);
+        DragGhostIcon.sprite = data.Icon;
+    }
+    public void UpdateDragPosition(Vector2 mousePos)
+    {
+        DragGhostIcon.transform.position = mousePos;
+    }
+    public void EndDrag()
+    {
+        DragGhostIcon.gameObject.SetActive(false );
     }
     private void Update()
     {
@@ -81,4 +102,13 @@ public class UI_InventoryManager : MonoBehaviour
     {
         Debug.Log($"玩家点击了{slotIndex}个格子！");
     }
+    public bool CanInterect()
+    {
+        return Time.time - _lastActionTime > ACTION_COOLDOWN;
+    }
+    public void NotifyActionSent()
+    {
+        _lastActionTime = Time.time;
+    }
+
 }

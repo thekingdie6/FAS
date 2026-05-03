@@ -46,13 +46,26 @@ public class InventoryNetWorkManager : NetworkBehaviour
             LoadPlayerDataFromDatabase(OwnerClientId);
         }
     }
+    //背包列表发生变化时，网络底层会自动触发这个方法
     private void HandleInventoryChanged(NetworkListEvent<ItemStack> changeEvent)
     {
+        if (UI_InventoryManager.Instance == null) return;
 
+        UI_InventoryManager.Instance.RefreshSlotUI(
+            changeEvent.Index, //发生变动的格子序号
+            changeEvent.Value.ItemID, 
+            changeEvent.Value.Amount//最新的ItemStack数据
+            );
     }
+
+    //玩家刚连入房间或者刚打开UI，强制对齐一次所有数据
     private void ForceRefreshUI()
     {
-
+        if (UI_InventoryManager.Instance == null) return;
+        for(int i=0;i<Inventory.Count; i++)
+        {
+            UI_InventoryManager.Instance.RefreshSlotUI(i, Inventory[i].ItemID, Inventory[i].Amount);
+        }
     }
     private bool CheckIfNewPlayer(ulong cliented) { return true;/*待实现*/ }
     private void LoadPlayerDataFromDatabase(ulong clientID) { /*待实现*/}

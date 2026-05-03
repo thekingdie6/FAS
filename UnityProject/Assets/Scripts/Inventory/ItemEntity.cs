@@ -68,6 +68,7 @@ public class ItemEntity : NetworkBehaviour
         {
             PickupItem(_targetPlayer.gameObject);
         }
+        
     }
     private void PickupItem(GameObject player)
     {

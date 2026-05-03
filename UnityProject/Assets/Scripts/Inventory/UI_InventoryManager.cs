@@ -91,7 +91,7 @@ public class UI_InventoryManager : MonoBehaviour
         }
     }
 
-    private void RefreshSlotUI(int index,ushort itemID,int amount)
+    public void RefreshSlotUI(int index,ushort itemID,int amount)
     {
         if (index < 0 || index >= _allUISlots.Length) return;
         ItemDataSO data = ItemManager.Instance.GetItemData(itemID);

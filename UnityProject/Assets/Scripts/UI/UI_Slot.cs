@@ -19,6 +19,7 @@ public class UI_Slot : MonoBehaviour,IBeginDragHandler,IDragHandler,IEndDragHand
     }
     public void UpdateView(ItemDataSO data,int amount)
     {
+        _currentItemData = data;
         if(data==null||amount==0)
         {
             Icon.gameObject.SetActive(false);
@@ -45,7 +46,7 @@ public class UI_Slot : MonoBehaviour,IBeginDragHandler,IDragHandler,IEndDragHand
     }
     public void OnEndDrag(PointerEventData eventData)
     {
-        if (_currentItemData == null) return;
+        //if (_currentItemData == null) return;
         Icon.color = new Color(1, 1, 1, 1f);//回复透明度
         UI_InventoryManager.Instance.EndDrag();
     }
@@ -56,7 +57,11 @@ public class UI_Slot : MonoBehaviour,IBeginDragHandler,IDragHandler,IEndDragHand
         if(sourceSlot != null &&sourceSlot!=this)//是预制体并且不是这个预制体
         {
             Debug.Log($"玩家把{sourceSlot.SlotIndex}格的物品，拖到了{this.SlotIndex}格！");
-            //请求发送给服务器
+            var localPlayerObject = Unity.Netcode.NetworkManager.Singleton.SpawnManager.GetLocalPlayerObject();//获取本地玩家网络对象;
+            if(localPlayerObject != null &&localPlayerObject.TryGetComponent<InventoryNetWorkManager>(out var inventory))//尝试获取本地玩家身上的背包管理器
+            {
+                inventory.RequestMoveItem(sourceSlot.SlotIndex, this.SlotIndex);//将移动请求发送给服务器！
+            }
         }
     }
 }

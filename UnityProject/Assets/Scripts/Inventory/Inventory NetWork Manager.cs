@@ -76,7 +76,13 @@ public class InventoryNetWorkManager : NetworkBehaviour
             MoveItemServerRpc(fromIndex, toIndex);
         }
     }
-
+    public void RequestDropItem(int slotIndex)
+    {
+        if(IsOwner)
+        {
+            DropItemServerRpc(slotIndex);
+        }
+    }
     public bool Server_AddLoot(ItemStack newLoot)
     {
         if (!IsServer || newLoot.IsEmpty) return false;
@@ -132,5 +138,36 @@ public class InventoryNetWorkManager : NetworkBehaviour
                 Inventory[toIndex] = fromItem;
                 Inventory[fromIndex] = toItem;
         }
+    }
+    [ServerRpc]
+    private void DropItemServerRpc(int slotIndex)
+    {//安全检验，防止越界或丢弃空气
+        if(slotIndex<0||slotIndex>=MaxSlots) return;
+        ItemStack itemToDrop=Inventory[slotIndex];
+        if (itemToDrop.IsEmpty) return;
+        //2.获取物品数据配置（为了拿到掉落物预制体）
+        ItemDataSO itemData = ItemManager.Instance.GetItemData(itemToDrop.ItemID);
+        if(itemData==null||itemData.DropPrefab==null)
+        {
+            Debug.LogWarning("找不到物品数据或掉落物预制体为空！");
+            return;
+        }
+        //3.数据层：清空该格数据，触发OnListChanged,自动让客机UI把格子变为空白
+        Inventory[slotIndex]=new ItemStack { ItemID=0, Amount=0 };
+
+        //4.物理表现层：在玩家面前生成掉落物
+        //稍微往上一点或往旁边偏移一点，防止直接生成在玩家脚底产生物理挤压
+        Vector3 dropPosition = transform.position + (Vector3.right * 0.5f) + (Vector3.up * 0.5f);
+        GameObject dropGo = Instantiate(itemData.DropPrefab, dropPosition, Quaternion.identity);
+
+        //5.联机生成（先Spawn，再改NetworkVariable触发回调）
+        dropGo.GetComponent<NetworkObject>().Spawn();
+
+        ItemEntity entityScript=dropGo.GetComponent<ItemEntity>();
+        if (entityScript != null)
+        {
+            entityScript.Payload.Value = itemToDrop;//将扣除数据塞给掉落物
+        }
+
     }
 }

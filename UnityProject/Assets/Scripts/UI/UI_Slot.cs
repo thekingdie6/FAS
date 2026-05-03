@@ -46,9 +46,20 @@ public class UI_Slot : MonoBehaviour,IBeginDragHandler,IDragHandler,IEndDragHand
     }
     public void OnEndDrag(PointerEventData eventData)
     {
-        //if (_currentItemData == null) return;
         Icon.color = new Color(1, 1, 1, 1f);//回复透明度
         UI_InventoryManager.Instance.EndDrag();
+        if (_currentItemData == null) return;
+        GameObject dropTarget = eventData.pointerCurrentRaycast.gameObject;
+        bool isDroppedOnSlot = dropTarget != null && dropTarget.GetComponentInParent<UI_Slot>() != null;
+        if (!isDroppedOnSlot)
+        {
+            Debug.Log($"玩家试图将{SlotIndex}格的物品丢弃到地上！");
+            var localPlayerObject = Unity.Netcode.NetworkManager.Singleton.SpawnManager.GetLocalPlayerObject();
+            if (localPlayerObject != null && localPlayerObject.TryGetComponent<InventoryNetWorkManager>(out var inventory))
+            {
+                inventory.RequestDropItem(this.SlotIndex);
+            }
+        }
     }
     public void OnDrop(PointerEventData eventData)
     {

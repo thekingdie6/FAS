@@ -18,7 +18,7 @@ MonoBehaviour:
   Category: 4
   MaxStackSize: 99
   Icon: {fileID: -5659601288151787448, guid: 5acd0344bafb6814aa5e8664da15fdc0, type: 3}
-  DropPrefab: {fileID: 0}
+  DropPrefab: {fileID: 4823550159525264204, guid: 0c38c570a26d7794198a8f0aaba53ece, type: 3}
   cropName: "\u767D\u83DC"
   growthDate: 5
   cropIcon: {fileID: 10907, guid: 0000000000000000f000000000000000, type: 0}

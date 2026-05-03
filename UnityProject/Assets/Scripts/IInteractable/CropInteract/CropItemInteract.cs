@@ -14,8 +14,10 @@ public class CropItemInteract : NetworkBehaviour,IInteractable
     //[SerializeField] private CropData cropData;
     private void GrowCrop(int currentDay)
     {
-        cropControllerScript.isWatered.Value = false;
         cropControllerScript.spriteRenderer.sprite = cropControllerScript.growthSprites[cropControllerScript.nutrient.Value];
+        if (!IsServer) return;
+        cropControllerScript.isWatered.Value = false;
+        Debug.Log("状态切换报错！");
         Debug.Log($"今日是第{currentDay}日，{gameObject.name}生长开始，浇水状态{cropControllerScript.isWatered.Value}");
     }
     public string GetInteractPrompt()
@@ -27,7 +29,8 @@ public class CropItemInteract : NetworkBehaviour,IInteractable
         if (!IsServer) return;
         if(cropControllerScript.growthStage.Value==CropData.GrowthStage.ripeness)//作物是不是成熟阶段
         {
-            Destroy(gameObject);
+            Server_HarvestCrop();
+            //Destroy(gameObject);
             Debug.Log($"作物被{interactor.name}捡起了！");
             return;
         }
@@ -48,6 +51,17 @@ public class CropItemInteract : NetworkBehaviour,IInteractable
             cropControllerScript.growthStage.Value = CropData.GrowthStage.ripeness;//切换为成熟阶段
             Debug.Log($"养分充足，现在有{cropControllerScript.nutrient.Value}点养分，成熟了！");
         }
+    }
+    public void Server_HarvestCrop()
+    {
+        gameObject.GetComponent<NetworkObject>().Despawn();
+        ItemStack loot = new ItemStack { ItemID =cropControllerScript.data.ItemID,Amount=3};
+        Debug.Log("获取了对象ID");
+        GameObject dropGo = Instantiate(cropControllerScript.data.DropPrefab, transform.position + Vector3.up * 0.5f, Quaternion.identity);
+
+        ItemEntity entityScript=dropGo.GetComponent<ItemEntity>();
+        dropGo.GetComponent<NetworkObject>().Spawn();
+        entityScript.Payload.Value = loot;
     }
 
 }

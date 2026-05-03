@@ -20,6 +20,7 @@ public class ItemManager : MonoBehaviour
         Instance = this;
         DontDestroyOnLoad(this.gameObject);//过场景不销毁
         //2.构建字典（核心操作）
+        InitializeDatabase();
         
     }
     private void InitializeDatabase()
@@ -38,6 +39,7 @@ public class ItemManager : MonoBehaviour
                 Debug.LogError($"发现重复的物品 ID：{item.ItemID}({item.ItemName}),请检查配置！");
                 continue;
             }
+            _itemDictionary.Add(item.ItemID, item);
         }
         Debug.Log($"物品注册表加载完毕，共加载了{_itemDictionary.Count}种物品。");
     }

@@ -64,6 +64,34 @@ public class InventoryNetWorkManager : NetworkBehaviour
         }
     }
 
+    public bool Server_AddLoot(ItemStack newLoot)
+    {
+        if (!IsServer || newLoot.IsEmpty) return false;
+        int maxStack=ItemManager.Instance.GetItemData(newLoot.ItemID).MaxStackSize;
+        for(int i=0; i<MaxSlots;i++)
+        {
+            if (Inventory[i].ItemID == newLoot.ItemID && Inventory[i].Amount<maxStack)
+            {
+                int spaceLeft = maxStack - Inventory[i].Amount;
+                int amountToAdd=Mathf.Min(newLoot.Amount,spaceLeft);
+                Inventory[i] = new ItemStack { ItemID = Inventory[i].ItemID, Amount = Inventory[i].Amount + amountToAdd };
+                newLoot.Amount -= amountToAdd;
+                if (newLoot.Amount <= 0) return true;
+            }
+        }
+        for (int i = 0; i < MaxSlots; i++)
+        {
+            if (Inventory[i].ItemID == 0)
+            {
+                int amountToAdd = Mathf.Min(newLoot.Amount, maxStack);
+                Inventory[i] = new ItemStack { ItemID = newLoot.ItemID, Amount = amountToAdd };
+                newLoot.Amount -= amountToAdd;
+                if (newLoot.Amount <= 0) return true;
+            }
+        }
+            return newLoot.Amount <= 0;
+    }
+
     [ServerRpc]
     private void MoveItemServerRpc(int fromIndex, int toIndex)
     {

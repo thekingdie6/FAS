@@ -40,12 +40,13 @@ public class UI_InventoryManager : MonoBehaviour
             return;
         }
         Instance = this;
+        InitializeSlots();
     }
     private void Start()
     {
         if(BackpackPanel!=null) { BackpackPanel.SetActive(false); }
         //初始生成所有格子
-        InitializeSlots();
+        //InitializeSlots();
         DragGhostIcon.gameObject.SetActive(false);
     }
     public void StartDrag(ItemDataSO data)

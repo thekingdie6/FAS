@@ -31,7 +31,8 @@ public class InventoryNetWorkManager : NetworkBehaviour
     }
     private void InitializeInventoryData()
     {
-        for(int i=0;i<MaxSlots;i++)
+        if (Inventory.Count >= MaxSlots) return;
+        for (int i=0;i<MaxSlots;i++)
         {
             Inventory.Add(new ItemStack { ItemID = 0, Amount = 0 });
         }
